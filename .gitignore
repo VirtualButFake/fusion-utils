@@ -9,7 +9,6 @@
 # Wally files
 /[Pp]ackages
 /[Ss]erverPackages
-wally.lock
 
 # DarkLua builds
 /build

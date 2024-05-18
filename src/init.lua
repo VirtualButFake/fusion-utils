@@ -8,16 +8,16 @@ local sizeFromLayer = require("./sizeFromLayer")
 local topLayerProvider = require("./topLayerProvider")
 
 local index = {
-	propertyProvider = propertyProvider :: typeof(propertyProvider),
-	awaitLayer = awaitLayer :: typeof(awaitLayer),
-	getState = getState :: typeof(getState),
-	onDestroy = onDestroy :: typeof(onDestroy),
-	use = use :: typeof(use),
-	peek = peek :: typeof(peek),
-	sizeFromLayer = sizeFromLayer :: typeof(sizeFromLayer),
-	topLayerProvider = topLayerProvider :: typeof(topLayerProvider),
+	propertyProvider = propertyProvider,
+	awaitLayer = awaitLayer,
+	getState = getState,
+	onDestroy = onDestroy,
+	use = use,
+	peek = peek,
+	sizeFromLayer = sizeFromLayer,
+	topLayerProvider = topLayerProvider,
 }
 
 export type layer = topLayerProvider.layer
 
-return index :: typeof(index)
+return index

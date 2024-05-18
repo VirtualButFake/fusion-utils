@@ -1,9 +1,16 @@
 [package]
 name = "virtualbutfake/fusionutils"
 description = "A collection of utilities for working with Fusion 0.2"
-version = "0.0.1"
+version = "0.0.137"
 registry = "https://github.com/UpliftGames/wally-index"
 realm = "shared"
-
+include = [
+    "build",
+    "build/**",
+    "LICENSE.md",
+    "wally.toml",
+    "default.project.json"
+]
+exclude = ["*", "build.rbxl"]
 [dependencies]
 fusion = "elttob/fusion@0.2.0"

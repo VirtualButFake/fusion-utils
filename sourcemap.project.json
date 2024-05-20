@@ -1,14 +1,9 @@
 {
 	"name": "fusionutils",
 	"tree": {
-		"$className": "DataModel",
-		"ReplicatedStorage": {
-			"Packages": {
-				"$path": "packages",
-				"FusionUtils": {
-					"$path": "src"
-				}
-			}
+		"$path": "packages",
+		"FusionUtils": {
+			"$path": "src"
 		}
 	}
 }

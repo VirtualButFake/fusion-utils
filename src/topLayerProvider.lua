@@ -16,7 +16,7 @@ function layer.new(content: Frame): (Frame, layer)
 		contents = contents,
 		referenceLayer = content,
 		_connections = {},
-        state = {}
+		state = {},
 	}, { __index = layer })
 
 	local containerSize = Value(UDim2.new(0, content.AbsoluteSize.X, 0, content.AbsoluteSize.Y))
@@ -50,12 +50,12 @@ function layer.new(content: Frame): (Frame, layer)
 			sizeConnection:Disconnect()
 			positionConnection:Disconnect()
 		end,
-
 		[Children] = {
 			New("Frame")({
 				Name = "TopLayer",
 				AnchorPoint = containerPositionalData.AnchorPoint,
 				BackgroundTransparency = 1,
+				ClipsDescendants = true,
 				Position = containerPositionalData.Position,
 				Size = containerSize,
 				ZIndex = 2,

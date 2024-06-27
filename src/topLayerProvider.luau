@@ -1,4 +1,4 @@
-local layer = {}
+local topLayerProvider = {}
 local activeLayers = {}
 
 local fusion = require("@packages/fusion")
@@ -9,7 +9,7 @@ local New = fusion.New
 local Value = fusion.Value
 local Ref = fusion.Ref
 
-function layer.new(content: Frame): (Frame, layer)
+function topLayerProvider.new(content: Frame): (Frame, layer)
 	local contents = fusion.Value({})
 
 	local newLayer = setmetatable({
@@ -17,7 +17,7 @@ function layer.new(content: Frame): (Frame, layer)
 		referenceLayer = content,
 		_connections = {},
 		state = {},
-	}, { __index = layer })
+	}, { __index = topLayerProvider })
 
 	local containerSize = Value(UDim2.new(0, content.AbsoluteSize.X, 0, content.AbsoluteSize.Y))
 	local containerPositionalData = {
@@ -75,7 +75,7 @@ function layer.new(content: Frame): (Frame, layer)
 		newLayer._connections,
 		parentFrame.InputChanged:Connect(function(input)
 			if input.UserInputType == Enum.UserInputType.MouseMovement then
-				local mouse2D = Vector2.new(input.Position.X, input.Position.Y)
+				local mouse2D = Vector2.new(input.Position.X, input.Position.Y) - parentFrame.AbsolutePosition
 				mousePosition:set(mouse2D)
 			end
 		end)
@@ -108,7 +108,7 @@ function layer.new(content: Frame): (Frame, layer)
 	return parentFrame, newLayer
 end
 
-function layer.getLayer(content: GuiObject): layer?
+function topLayerProvider.getLayer(content: GuiObject): layer?
 	local eligibleLayers = {}
 
 	for _, activeLayer in activeLayers do
@@ -143,7 +143,7 @@ function layer.getLayer(content: GuiObject): layer?
 	return
 end
 
-function layer.add(self: layer, content: GuiObject)
+function topLayerProvider.add(self: layer, content: GuiObject)
 	local currentContents = self.contents:get()
 
 	if table.find(currentContents, content) then
@@ -154,7 +154,7 @@ function layer.add(self: layer, content: GuiObject)
 	self.contents:set(currentContents)
 end
 
-function layer.remove(self: layer, content: GuiObject)
+function topLayerProvider.remove(self: layer, content: GuiObject)
 	local currentContents = self.contents:get()
 	local index = table.find(currentContents, content)
 
@@ -166,7 +166,7 @@ function layer.remove(self: layer, content: GuiObject)
 	self.contents:set(currentContents)
 end
 
-function layer.destroy(self: layer)
+function topLayerProvider.destroy(self: layer)
 	local index = table.find(activeLayers, self)
 
 	if index then
@@ -192,7 +192,7 @@ export type layer = typeof(setmetatable(
 		},
 		_connections: { RBXScriptConnection },
 	},
-	{ __index = layer }
+	{ __index = topLayerProvider }
 ))
 
-return layer
+return topLayerProvider

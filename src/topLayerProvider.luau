@@ -75,8 +75,7 @@ function topLayerProvider.new(content: Frame): (Frame, layer)
 		newLayer._connections,
 		parentFrame.InputChanged:Connect(function(input)
 			if input.UserInputType == Enum.UserInputType.MouseMovement then
-				local mouse2D = Vector2.new(input.Position.X, input.Position.Y) - parentFrame.AbsolutePosition
-				mousePosition:set(mouse2D)
+				mousePosition:set(Vector2.new(input.Position.X, input.Position.Y))
 			end
 		end)
 	)

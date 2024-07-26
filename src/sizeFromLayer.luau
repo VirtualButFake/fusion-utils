@@ -1,5 +1,4 @@
 local fusion = require("@packages/fusion")
-local Computed = fusion.Computed
 local Observer = fusion.Observer
 local Value = fusion.Value
 
@@ -9,8 +8,9 @@ local onDestroy = require("@src/onDestroy")
 
 return function(object: fusion.CanBeState<GuiObject>, size: UDim2): fusion.Value<UDim2>
 	local passedSize = Value(UDim2.new())
+	local pendingCleanup = {}
 
-	Computed(function()
+	local function updateObject()
 		if not use(object) then
 			return nil
 		end
@@ -30,13 +30,16 @@ return function(object: fusion.CanBeState<GuiObject>, size: UDim2): fusion.Value
 
 			updateSize()
 
-			onDestroy(use(object), { disconnect })
+			onDestroy(use(object), { disconnect, pendingCleanup })
 
 			return nil
 		end)
 
 		return nil
-	end)
+	end
+
+	table.insert(pendingCleanup, typeof(object) == "table" and Observer(object):onChange(updateObject) or nil)
+    updateObject()
 
 	return passedSize
 end

@@ -9,5 +9,5 @@ dependencies = []
 
 [[package]]
 name = "virtualbutfake/fusionutils"
-version = "0.0.1"
+version = "0.1.0"
 dependencies = [["fusion", "elttob/fusion@0.2.0"]]

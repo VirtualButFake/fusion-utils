@@ -1,5 +1,5 @@
 {
-	"name": "fusionutils",
+	"name": "fusion-utils",
 	"emitLegacyScripts": false,
 	"tree": {
 		"$className": "DataModel",

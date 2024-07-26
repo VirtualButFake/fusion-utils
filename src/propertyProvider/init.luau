@@ -1,7 +1,7 @@
 local module = {}
 local types = require("./types")
 
-function module.getProps(props: { [string]: any }, instanceType: string): { [string]: any }
+function module.getProps(props: { [any]: any }, instanceType: string): { [string]: any }
 	local validProps = types[instanceType]
 
 	if not validProps then
@@ -19,7 +19,7 @@ function module.getProps(props: { [string]: any }, instanceType: string): { [str
 	return newProps
 end
 
-function module.getPropsAndSpecialKeys(props: { [string]: any }, instanceType: string): { [string]: any }
+function module.getPropsAndSpecialKeys(props: { [any]: any }, instanceType: string): { [any]: any }
 	local validProps = types[instanceType]
 
 	if not validProps then

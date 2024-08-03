@@ -39,7 +39,7 @@ return function(object: fusion.CanBeState<GuiObject>, size: UDim2): fusion.Value
 	end
 
 	table.insert(pendingCleanup, typeof(object) == "table" and Observer(object):onChange(updateObject) or nil)
-    updateObject()
+	updateObject()
 
 	return passedSize
 end

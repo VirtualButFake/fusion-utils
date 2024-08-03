@@ -1,9 +1,10 @@
 {
 	"name": "fusion-utils",
 	"tree": {
-		"$path": "packages",
-		"FusionUtils": {
+		"$className": "Folder",
+		"fusion-utils": {
 			"$path": "src"
-		}
+		},
+		"$path": "packages"
 	}
 }

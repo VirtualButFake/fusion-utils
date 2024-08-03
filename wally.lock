@@ -8,6 +8,6 @@ version = "0.2.0"
 dependencies = []
 
 [[package]]
-name = "virtualbutfake/fusionutils"
-version = "0.1.0"
+name = "virtualbutfake/fusion-utils"
+version = "0.1.1"
 dependencies = [["fusion", "elttob/fusion@0.2.0"]]

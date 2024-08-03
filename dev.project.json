@@ -1,14 +1,14 @@
 {
 	"name": "fusion-utils",
-	"emitLegacyScripts": false,
 	"tree": {
 		"$className": "DataModel",
 		"ReplicatedStorage": {
 			"Packages": {
-				"$path": "packages",
-				"FusionUtils": {
-					"$path": "build"
-				}
+				"$className": "Folder",
+				"fusion-utils": {
+					"$path": "dist"
+				},
+				"$path": "packages"
 			}
 		}
 	}

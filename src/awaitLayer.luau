@@ -1,17 +1,12 @@
 -- wrapper for reactive topLayerProvider.getLayer
-local fusion = require("@packages/fusion")
-local Clean = fusion.cleanup
-local Computed = fusion.Computed
-local Value = fusion.Value
-
 local topLayerProvider = require("@src/topLayerProvider")
-local use = require("@src/use")
+local types = require("@src/types")
 
-return function(object: GuiObject, callback: (layer: topLayerProvider.layer) -> any): nil
-	local parent = Value(object.Parent :: GuiObject)
+return function(scope: types.Scope, object: GuiObject, callback: (layer: topLayerProvider.layer) -> any): nil
+	local parent = scope:Value(object.Parent :: GuiObject)
 
 	local layerComputed
-	local updateValue = Value(false)
+	local updateValue = scope:Value(false)
 
 	local connection = object.AncestryChanged:Connect(function()
 		parent:set(object.Parent)
@@ -24,7 +19,7 @@ return function(object: GuiObject, callback: (layer: topLayerProvider.layer) -> 
 
 	local handled = false
 
-	layerComputed = Computed(function()
+	layerComputed = scope:Computed(function(use)
 		if updateValue:get() then
 			updateValue:set(false)
 		end
@@ -38,7 +33,7 @@ return function(object: GuiObject, callback: (layer: topLayerProvider.layer) -> 
 		end
 
 		return nil
-	end, Clean)
+	end)
 
 	return nil
 end

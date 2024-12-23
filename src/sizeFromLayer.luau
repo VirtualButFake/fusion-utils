@@ -1,21 +1,20 @@
 local fusion = require("@packages/fusion")
-local Observer = fusion.Observer
-local Value = fusion.Value
 
 local awaitLayer = require("@src/awaitLayer")
-local use = require("@src/use")
 local onDestroy = require("@src/onDestroy")
+local types = require("@src/types")
+local peek = fusion.peek
 
-return function(object: fusion.CanBeState<GuiObject>, size: UDim2): fusion.Value<UDim2>
-	local passedSize = Value(UDim2.new())
+return function(scope: types.Scope, object: fusion.UsedAs<GuiObject>, size: UDim2): types.Value<UDim2>
+	local passedSize = scope:Value(UDim2.new())
 	local pendingCleanup = {}
 
 	local function updateObject()
-		if not use(object) then
+		if not peek(object) then
 			return nil
 		end
 
-		awaitLayer(use(object), function(layer)
+		awaitLayer(scope, peek(object), function(layer)
 			local function updateSize()
 				local newSize: UDim2 = layer.state.size:get()
 				passedSize:set(
@@ -26,11 +25,10 @@ return function(object: fusion.CanBeState<GuiObject>, size: UDim2): fusion.Value
 				)
 			end
 
-			local disconnect = Observer(layer.state.size):onChange(updateSize)
+			local disconnect = scope:Observer(layer.state.size):onChange(updateSize)
 
 			updateSize()
-
-			onDestroy(use(object), { disconnect, pendingCleanup })
+			onDestroy(peek(object), { disconnect, pendingCleanup })
 
 			return nil
 		end)
@@ -38,7 +36,7 @@ return function(object: fusion.CanBeState<GuiObject>, size: UDim2): fusion.Value
 		return nil
 	end
 
-	table.insert(pendingCleanup, typeof(object) == "table" and Observer(object):onChange(updateObject) or nil)
+	table.insert(pendingCleanup, typeof(object) == "table" and scope:Observer(object):onChange(updateObject) or nil)
 	updateObject()
 
 	return passedSize

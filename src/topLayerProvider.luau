@@ -3,29 +3,26 @@ local activeLayers = {}
 
 local fusion = require("@packages/fusion")
 local Children = fusion.Children
-local Cleanup = fusion.Cleanup
-local New = fusion.New
+local peek = fusion.peek
 
-local Value = fusion.Value
-local Ref = fusion.Ref
+local types = require("@src/types")
 
-function topLayerProvider.new(content: Frame): (Frame, layer)
-	local contents = fusion.Value({})
+function topLayerProvider.new(scope: types.Scope, content: Frame): (Frame, layer)
+	local contents = scope:Value({})
 
 	local newLayer = setmetatable({
 		contents = contents,
 		referenceLayer = content,
-		_connections = {},
 		state = {},
+		_connections = {},
+		_scope = scope,
 	}, { __index = topLayerProvider })
 
-	local containerSize = Value(UDim2.new(0, content.AbsoluteSize.X, 0, content.AbsoluteSize.Y))
+	local containerSize = scope:Value(UDim2.new(0, content.AbsoluteSize.X, 0, content.AbsoluteSize.Y))
 	local containerPositionalData = {
-		AnchorPoint = Value(content.AnchorPoint),
-		Position = Value(content.Position),
+		AnchorPoint = scope:Value(content.AnchorPoint),
+		Position = scope:Value(content.Position),
 	}
-
-	local parentFrameRef = Value(nil)
 
 	local sizeConnection = content:GetPropertyChangedSignal("AbsoluteSize"):Connect(function()
 		local size = content.AbsoluteSize
@@ -40,18 +37,12 @@ function topLayerProvider.new(content: Frame): (Frame, layer)
 		containerPositionalData.Position:set(position)
 	end)
 
-	local parentFrame: Frame = New("Frame")({
+	local parentFrame: Frame = scope:New("Frame")({
 		Name = "Layer",
 		BackgroundTransparency = 1,
 		Size = UDim2.fromScale(1, 1),
-		[Ref] = parentFrameRef,
-		[Cleanup] = function()
-			newLayer:destroy()
-			sizeConnection:Disconnect()
-			positionConnection:Disconnect()
-		end,
 		[Children] = {
-			New("Frame")({
+			scope:New("Frame")({
 				Name = "TopLayer",
 				AnchorPoint = containerPositionalData.AnchorPoint,
 				BackgroundTransparency = 1,
@@ -68,8 +59,8 @@ function topLayerProvider.new(content: Frame): (Frame, layer)
 	newLayer.contentFrame = parentFrame
 	table.insert(activeLayers, newLayer)
 
-	local mousePosition = Value(Vector2.new())
-	local mouseDown = Value(false)
+	local mousePosition = scope:Value(Vector2.new())
+	local mouseDown = scope:Value(false)
 
 	table.insert(
 		newLayer._connections,
@@ -103,6 +94,12 @@ function topLayerProvider.new(content: Frame): (Frame, layer)
 		mouseDown = mouseDown,
 		size = containerSize,
 	}
+
+	table.insert(scope, function()
+		newLayer:destroy()
+		sizeConnection:Disconnect()
+		positionConnection:Disconnect()
+	end)
 
 	return parentFrame, newLayer
 end
@@ -143,7 +140,7 @@ function topLayerProvider.getLayer(content: GuiObject): layer?
 end
 
 function topLayerProvider.add(self: layer, content: GuiObject)
-	local currentContents = self.contents:get()
+	local currentContents = peek(self.contents)
 
 	if table.find(currentContents, content) then
 		return
@@ -154,7 +151,7 @@ function topLayerProvider.add(self: layer, content: GuiObject)
 end
 
 function topLayerProvider.remove(self: layer, content: GuiObject)
-	local currentContents = self.contents:get()
+	local currentContents = peek(self.contents)
 	local index = table.find(currentContents, content)
 
 	if not index then
@@ -181,15 +178,16 @@ end
 
 export type layer = typeof(setmetatable(
 	{} :: {
-		contents: fusion.Value<{ GuiObject }>,
+		contents: types.Value<{ GuiObject }>,
 		contentFrame: Frame,
 		referenceLayer: Frame,
 		state: {
-			mousePosition: fusion.Value<Vector2>,
-			mouseDown: fusion.Value<boolean>,
-			size: fusion.Value<UDim2>,
+			mousePosition: types.Value<Vector2>,
+			mouseDown: types.Value<boolean>,
+			size: types.Value<UDim2>,
 		},
 		_connections: { RBXScriptConnection },
+		_scope: types.Scope,
 	},
 	{ __index = topLayerProvider }
 ))

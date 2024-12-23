@@ -23,6 +23,10 @@ Documentation of all functions, libraries and providers is available [here](http
 
 Contributions are always welcomed. Code should follow Stylua and Selene formatting conventions. To contribute, fork this repository, make your changes, and create a pull request. Please make sure to test your changes before creating a pull request.
 
+## Changelog
+
+A changelog is available [here](CHANGELOG.md).
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/virtualbutfake/fusion-utils/blob/main/LICENSE.md) file for details.

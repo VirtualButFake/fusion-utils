@@ -3,3 +3,4 @@
 - Update to Fusion 0.3
 - Remove `peek` in favor of Fusion's new `peek` function
 - Remove `use` as it is no longer supported in Fusion 0.3
+- Add `propertyProvider.merge` to replace Hydrate usage in FusionComponents

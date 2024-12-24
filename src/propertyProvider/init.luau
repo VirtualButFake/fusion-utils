@@ -41,4 +41,22 @@ function module.getPropsAndSpecialKeys(props: { [any]: any }, instanceType: stri
 	return newProps
 end
 
+function module.merge(originalProps: { [any]: any }, addedProps: { [any]: any }): { [any]: any }
+	-- merge only string keys, for the rest, check if they already exist and ignore and warn if they do, otherwise add them
+	local newProps = table.clone(originalProps)
+
+	for key, value in pairs(addedProps) do
+		if newProps[key] and typeof(key) == "table" then
+			warn(
+				"PropertyProvider: SpecialKey (or table) already exists in original properties. Traceback: "
+					.. debug.traceback()
+			)
+		else
+			newProps[key] = value
+		end
+	end
+
+	return newProps
+end
+
 return module

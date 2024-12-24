@@ -1,4 +1,5 @@
 local module = {}
+local fusion = require("@packages/fusion")
 local types = require("./types")
 
 function module.getProps(props: { [any]: any }, instanceType: string): { [string]: any }
@@ -41,7 +42,7 @@ function module.getPropsAndSpecialKeys(props: { [any]: any }, instanceType: stri
 	return newProps
 end
 
-function module.merge(originalProps: { [any]: any }, addedProps: { [any]: any }): { [any]: any }
+function module.merge(originalProps: fusion.PropertyTable, addedProps: fusion.PropertyTable): fusion.PropertyTable
 	-- merge only string keys, for the rest, check if they already exist and ignore and warn if they do, otherwise add them
 	local newProps = table.clone(originalProps)
 

@@ -16,7 +16,7 @@ return function(scope: types.Scope, object: fusion.UsedAs<GuiObject>, size: UDim
 
 		awaitLayer(scope, peek(object), function(layer)
 			local function updateSize()
-				local newSize: UDim2 = layer.state.size:get()
+				local newSize: UDim2 = peek(layer.state.size)
 				passedSize:set(
 					UDim2.fromOffset(
 						newSize.X.Offset * size.X.Scale + size.X.Offset,

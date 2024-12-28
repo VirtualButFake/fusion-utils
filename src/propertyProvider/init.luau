@@ -42,7 +42,7 @@ function module.getPropsAndSpecialKeys(props: { [any]: any }, instanceType: stri
 	return newProps
 end
 
-function module.merge(originalProps: fusion.PropertyTable, addedProps: fusion.PropertyTable): fusion.PropertyTable
+function module.merge<T>(originalProps: T & {}, addedProps: fusion.PropertyTable): T
 	-- merge only string keys, for the rest, check if they already exist and ignore and warn if they do, otherwise add them
 	local newProps = table.clone(originalProps)
 
